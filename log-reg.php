@@ -1,6 +1,11 @@
 
 <?php
     include 'inc/User.php';
+    Session::init();
+    $login = Session::get('login');
+    if($login === true){
+       header("Location:index.php");
+    }
     $user = new User();
     $usrLogin = '';
     if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])){

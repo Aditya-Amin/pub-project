@@ -1,4 +1,11 @@
-
+<?php
+    include_once 'inc/Session.php';
+    Session::init();
+    if(isset($_GET['action']) && $_GET['action'] == 'logout'){
+      Session::destroy();
+      Session::set('login',false);
+    } 
+?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -148,7 +155,18 @@
       <p class="footer-alt mb-0 f-14">2019 © Tanvir, all rights reserved</p>
     </div>
   </footer>
+  <?php 
 
+       $userLogin = Session::get('login');
+       if($userLogin === true){
+  ?>
+
+    <a id="logout" href="?action=logout" data-toggle="tooltip" title="Want to logout?!"><img width="100%" height="100%" src="images/shutdown.png" alt="shutdown"></a>
+    <a class="profile-img" href="profile.php" data-toggle="tooltip" title="go to profile">
+      <img src="images/profile.jpg" height="100%" width="100%" alt="">
+    </a>
+
+  <?php }?>
 
   <!-- Optional JavaScript -->
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->

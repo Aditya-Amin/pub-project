@@ -1,3 +1,25 @@
+<?php
+      include 'inc/User.php';
+      Session::init();
+      if(isset($_GET['action']) && $_GET['action'] == 'logout'){
+        Session::destroy();
+        Session::set('login',false);
+      }
+     
+     $log  = Session::get('login');
+     if( $log === false){
+        header("Location:index.php");
+     }
+     
+
+     $user = new User();    
+     $name = Session::get('name');
+     $email = Session::get('email');
+   
+   
+?>
+
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -26,7 +48,7 @@
 
       <div class="back">
         <div class="info">
-          <h2>Teachers Name</h2>
+          <h2><?php if(isset($name)){ echo $name; } ?></h2>
           <p>Designation</p>
         </div>
       </div>
@@ -193,7 +215,7 @@
       <p class="footer-alt mb-0 f-14">2019 © Tanvir, all rights reserved</p>
     </div>
   </footer>
-
+  <a id="logout" href="?action=logout" data-toggle="tooltip" title="Want to logout?!"><img width="100%" height="100%" src="images/shutdown.png" alt="shutdown"></a>
 
   <!-- Optional JavaScript -->
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->

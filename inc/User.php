@@ -1,6 +1,6 @@
 <?php
 
-   include 'Session.php';
+   include_once 'Session.php';
    include 'Database.php';
 
    class User{
@@ -90,20 +90,35 @@
             $md5    = md5($pass);
             $chkUserEmail = $this->checkUserEmail($email);
             $chkUserPass  = $this->checkUserPass($md5);
+           
 
             if($email == '' || $pass == ''){
                 $errMsg =  "<span class='alert alert-danger'><strong>Error:</strong>Field Must Not Be Empty!</span>";
-                return $errMsg; 
-            }
-            if($chkUserPass == false){
-                $errMsg =  "<span class='alert alert-danger'><strong>Error:</strong>Wrong password!</span>";
                 return $errMsg; 
             }
             if($chkUserEmail == false){
                 $errMsg =  "<span class='alert alert-danger'><strong>Error:</strong>Wrong Email!</span>";
                 return $errMsg; 
             }
-            header("Location:profile.php"); 
+            if($chkUserPass == false){
+                $errMsg =  "<span class='alert alert-danger'><strong>Error:</strong>Wrong password!</span>";
+                return $errMsg; 
+            }
+          
+            $userLogin = $this->getUserLogin($email,$md5);
+            if($userLogin){
+                Session::init();
+                Session::set('login',true);
+                Session::set('id', $userLogin->id);
+                Session::set('name', $userLogin->username);
+                Session::set('email', $userLogin->useremail);
+                header("Location:profile.php"); 
+            }else{
+                $errMsg =  "<span class='alert alert-danger'><strong>Error:</strong>login can't possible!</span>";
+                return $errMsg; 
+            }
+
+            
       }
 
       public function checkUserPass($pass){
@@ -116,6 +131,16 @@
             }else{
                 return false;
             }
+      }
+
+      public function getUserLogin($email,$pass){
+          $select = "SELECT * FROM pub_users WHERE useremail = :email AND userpass = :pass LIMIT 1";
+          $query = $this->db->pdo->prepare($select);
+          $query->bindValue(':email', $email);
+          $query->bindValue(':pass', $pass);
+          $query->execute();
+          $result = $query->fetch(PDO::FETCH_OBJ);
+          return $result;
       }
    }
 ?>
