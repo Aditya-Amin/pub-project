@@ -142,5 +142,17 @@
           $result = $query->fetch(PDO::FETCH_OBJ);
           return $result;
       }
+
+      public function getAllCourse(){
+          $courses = $this->db->pdo->prepare("SELECT * FROM `course_tbl`");
+          $courses->execute();
+          $result = $courses->fetchAll();
+          if(empty($result)){
+              return false;
+          }else{
+              return $result;
+          }
+      }
+
    }
 ?>
