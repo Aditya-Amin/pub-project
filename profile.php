@@ -15,7 +15,10 @@
      $user = new User();    
      $name = Session::get('name');
      $email = Session::get('email');
+     $ID = Session::get('id');
+
      $courses = $user->getAllCourse();
+     $userInfos = $user->getuserInfo($ID);
   
 ?>
 
@@ -47,6 +50,8 @@
       <h1>The People's University of Bangladesh</h1>
       <h3>Online Course Timeline</h3>
     </div>
+    <?php if($userInfos){?>
+    <?php foreach($userInfos as $userInfo){?>
     <div class="card">
       <div class="front">
 
@@ -55,14 +60,24 @@
       <div class="back">
         <div class="info">
           <h2><?php if(isset($name)){ echo $name; } ?></h2>
-          <p>Designation</p>
+          <p id="designation"><?php echo $userInfo['designation'];?></p>
+          <button type="button" id="edit">Edit</button>
         </div>
       </div>
 
       <div class="profile-img">
-        <img src="images/profile.jpg" height="400px" width="300px" alt="">
+        <div class="up-img">
+          <img src="uploads/<?php echo $userInfo['pro_img'];?>" height="400px" width="300px" alt="">
+        </div>
+        <div class="up-prof">
+          <input type="file" name="file" id="file">
+          <i class="fas fa-camera"></i>
+        </div>
       </div>
+      <p id="showErr"></p>
     </div>
+    <?php }?>
+    <?php }?>
 
   </div>
 
@@ -209,9 +224,9 @@
   <script src="js/jquery-3.4.1.min.js"></script>
   <script src="js/popper.min.js"></script>
   <script src="js/bootstrap.min.js"></script>
-
   <script src="js/ajax.functions.js"></script>
   <script src="js/ajax.request.js"></script>
+  <script src="js/main.js"></script>
 </body>
 
 </html>

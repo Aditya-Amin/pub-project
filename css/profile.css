@@ -70,6 +70,18 @@ font-family: 'Courgette', cursive;
   width: 100%;
 }
 
+.card .back .info button{
+  position:relative;
+  left: 74px;
+  bottom: 45px;
+  border: none;
+  line-height: 1em;
+  border-radius: 3px;
+  padding: 5px 8px;
+  color:white;
+  background: linear-gradient(25deg, rgba(35,161,58,1) 63%, rgba(157,168,21,1) 100%, rgba(132,153,12,1) 100%, rgba(255,255,255,1) 100%);
+}
+
 .card .back h2{
   color:black;
   font-size: 20px;
@@ -91,6 +103,38 @@ font-family: 'Courgette', cursive;
       left: 17%;
   border:10px solid white;
 }
+
+
+
+.card .profile-img i{
+  font-size: 31px;
+  color: #674949;
+  position: relative;
+  
+}
+
+.card .profile-img i:hover{
+  cursor: pointer;
+}
+
+.card .profile-img .up-prof {
+
+  position:relative;
+  left: 50px;
+  bottom: 58px;
+  
+}
+
+
+.card .profile-img .up-prof input{
+  
+      position: relative;
+      z-index:99;
+      /* opacity:0; */
+      width:33px;
+      left: 37px;
+    opacity: 0;
+    }
 
 .card .profile-img img{
   width: 100%;

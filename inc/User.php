@@ -154,5 +154,92 @@
           }
       }
 
+      public function getuserInfo($id){
+        $courses = $this->db->pdo->prepare("SELECT * FROM `pub_users` WHERE id = :ID");
+        $courses->bindValue(':ID',$id);
+        $courses->execute();
+        $result = $courses->fetchAll();
+        if(empty($result)){
+            return false;
+        }else{
+            return $result;
+        }
+    }
+
+    public function getuserPosts($code,$id){
+        $courses = $this->db->pdo->prepare("SELECT * FROM `course_timeline` WHERE course_code = :code AND user_id = :ID");
+        $courses->bindValue(':code',$code);
+        $courses->bindValue(':ID',$id);
+        $courses->execute();
+        $result = $courses->fetchAll();
+        if(empty($result)){
+            return false;
+        }else{
+            return $result;
+        }
+    }
+
+      public function upload_file($arr, $location)
+      {
+          $fileArr = explode(".", $arr['file']['name']);
+          $fileExt = end($fileArr);
+          $newName = $fileArr[0] . rand(100, 999) . "." . $fileExt;
+          $move_path = $location . '/' . $newName;
+          $move = move_uploaded_file($arr['file']['tmp_name'], $move_path);
+          chmod($move_path, 0777);
+          if ($move === TRUE) {
+              return $newName;
+          } else {
+              return false;
+          }
+      }
+
+      public function updateUser($image, $id){
+          $update = $this->db->pdo->prepare("UPDATE `pub_users` SET `pro_img` = :image WHERE `pub_users`.`id` = :ID");
+          $update->bindValue(':image',$image);
+          $update->bindValue(':ID',$id);
+          $update->execute();
+          $result = $update->rowCount();
+          if($result){
+              return true;
+          }else{
+              return false;
+          }
+      }
+
+      public function convertDateTime($value){
+        $timestamp = strtotime($value);
+        $month = date("m", $timestamp);
+        if($month == '01'){
+            $month = 'Jan';
+        }elseif($month == '02'){
+            $month = 'Feb';
+        }elseif($month == '03'){
+            $month = 'Mar';
+        }elseif($month == '04'){
+            $month = 'Apr';
+        }elseif($month == '05'){
+            $month = 'May';
+        }elseif($month == '06'){
+            $month = 'June';
+        }elseif($month == '07'){
+            $month = 'July';
+        }elseif($month == '08'){
+            $month = 'Aug';
+        }elseif($month == '09'){
+            $month = 'Sept';
+        }elseif($month == '10'){
+            $month = 'Oct';
+        }elseif($month == '11'){
+            $month = 'Nov';
+        }else{
+            $month = 'Dec';
+        }
+
+        $date = $month." ".date("d, Y H:i a", $timestamp);
+
+        return $date;
+    }
+
    }
 ?>

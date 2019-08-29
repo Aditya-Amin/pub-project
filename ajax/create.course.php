@@ -1,11 +1,10 @@
 <?php
    include dirname(__DIR__).'/inc/Database.php';
-   include dirname(__DIR__).'/inc/Session.php';
+  
   
 
    if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['create']) && $_POST['create'] = 'create'){
        $DB = new Database();
-       $user = new Database();
        $course_code  = $_POST['name']; 
        $course_title = $_POST['title'];
 

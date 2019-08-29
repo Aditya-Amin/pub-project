@@ -1,26 +1,72 @@
+<?php
+      include 'inc/User.php';
+      Session::init();
+      if(isset($_GET['action']) && $_GET['action'] == 'logout'){
+        Session::destroy();
+        Session::set('login',false);
+      }
+
+     $user = new User();    
+     $ID = Session::get('id');
+
+     $userInfos = $user->getuserInfo($ID);
+     $userID = '';
+     if($userInfos){
+       foreach($userInfos as $userInfo){
+         $userID = $userInfo['id'];
+       }
+     }
+
+     $course_code = '';
+     if($_GET['courseid']){
+       $course_code = $_GET['courseid'];
+     }
+
+     echo $ID." ".$course_code;
+     $getPosts = $user->getuserPosts($course_code, $ID);
+     $getUser = $user->getuserInfo($ID);
+  
+?>
+
+
+
 <!doctype html>
 <html lang="en">
+
 <head>
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
   <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
-
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+    integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/fontawesome.all.min.css">
   <link rel="stylesheet" href="css/course-page.css">
   <title>Online Course Timeline</title>
+  <style>
+    #upload-file {
+      display: block;
+      position: relative;
+      bottom: 37px;
+      left: 10px;
+      opacity: 0;
+    }
+  </style>
 </head>
+
 <body>
 
   <div id="snow_fall"></div>
 
   <aside class="sidebar-left-collapse">
     <a href="#" class="company-logo"><img src="images/profile.jpg" alt=""></a>
-
-    <h2>Teachers Name</h2>
-    <h3>Course Name</h3>
+  
+    <h2><?php echo Session::get('name');?></h2>
+  
     <div class="sidebar-links">
       <div class="link-blue">
         <a href="#">
@@ -53,9 +99,13 @@
     <div class="container">
       <div class="row">
         <div class="col-sm-12">
-          <div class="heading">  <h1>Course Timeline</h1></div>
+          <div class="heading">
+            <h1>Course Timeline</h1>
+          </div>
         </div>
+        <?php if($ID = $userID){?>
         <div class="col-sm-12">
+          <p id="showErr"></p>
           <div class="post">
             <div class="post-header">
               <h2 class="post-title" id="post-header-title">
@@ -66,7 +116,7 @@
             <form id="widget-form" class="post-form" name="form">
               <div class="post-content">
                 <label for="post-content" class="sr-only">share your moments</label>
-                <textarea name="post" class="post-text" placeholder="Todays class topics"></textarea>
+                <textarea id="contents" name="post" class="post-text" placeholder="Todays class topics"></textarea>
               </div>
 
               <div class="post-actions post-actions">
@@ -77,43 +127,33 @@
                       upload fies
                     </label>
                   </button>
-                  <input type="file" id="upload-image" accept="image/*" multiple>
+                  <input type="file" id="upload-file" name="file" multiple>
                 </div>
+                <input type="hidden" id="course_code" value="<?php echo $course_code; ?>">
                 <div class="post-actions__widget">
-                  <button class="btn post-actions__publish">publish</button>
+                  <button id="publish" type="button" class="btn post-actions__publish">publish</button>
                 </div>
+
               </div>
             </form>
           </div>
         </div>
+        <?php }?>
 
 
+        <?php if($getPosts){?>
+        <?php foreach($getPosts as $getPost){?>
         <div class="col-sm-12">
           <div class="box">
-            <h1>DATE : Jan 9 , 2019</h1>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
-            <br><button>Download</button>
+            <h1><?php echo $user->convertDateTime($getPost['date']);?></h1>
+            <p><?php echo $getPost['post_content']?></p>
+            <a href="uploads/<?php echo $getPost['attach_file']?>"><?php echo $getPost['attach_file']?></a>
           </div>
         </div>
-
-        <div class="col-sm-12">
-          <div class="box">
-            <h1>DATE : Jan 9 , 2019</h1>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
-            <br><button>Download</button>
-          </div>
-        </div>
+        <?php }?>
+        <?php }?>
 
 
-
-
-        <div class="col-sm-12">
-          <div class="box">
-            <h1>DATE : Jan 9 , 2019</h1>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
-            <br><button>Download</button>
-          </div>
-        </div>
 
 
 
@@ -148,21 +188,32 @@
 
   <!-- Optional JavaScript -->
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <script src="js/jquery-3.4.1.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
+  </script>
+  <script src="js/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+  </script>
   <script type="text/javascript" src="js/particles.js"></script>
   <script type="text/javascript" src="js/app.js"></script>
   <script type="text/javascript">
-  $(function () {
-    var links = $('.sidebar-links > div');
+    $(function () {
+      var links = $('.sidebar-links > div');
 
-    links.on('click', function () {
-      links.removeClass('selected');
-      $(this).addClass('selected');
+      links.on('click', function () {
+        links.removeClass('selected');
+        $(this).addClass('selected');
+      });
     });
-  });
-
   </script>
+  <script src="js/ajax.functions.js"></script>
+  <script src="js/ajax.request.js"></script>
+  <script src="js/main.js"></script>
 </body>
+
 </html>
