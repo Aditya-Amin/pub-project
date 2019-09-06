@@ -7,7 +7,12 @@
       }
 
      $user = new User();    
-     $ID = Session::get('id');
+     $ID = '';
+     $sessionID = Session::get('id');
+     $login = Session::get('login');
+     if(isset($_GET['id'])){
+       $ID  = $_GET['id'];
+     }
 
      $userInfos = $user->getuserInfo($ID);
      $userID = '';
@@ -33,8 +38,9 @@
      if(isset($_GET['shift'])){
       $getPosts = $user->getuserPostsByShift($course_code, $ID, $_GET['shift'], $offset, 5);
      }else{
-      $getPosts = $user->getuserPosts($course_code, $ID, $offset, 5);
-     } 
+     $getPosts = $user->getuserPosts($course_code, $ID, $offset, 5);
+     }
+     
 
 ?>
 
@@ -92,26 +98,27 @@
     <?php }else {?>
       <a href="profile.php" class="company-logo"><img src="uploads/<?php echo $user['pro_img']; ?>" alt="<?php echo $user['pro_img']; ?>"></a>
     <?php }?>
+    <h2><?php echo $user['username']; ?></h2>
     <?php }?>
     <?php }?>
-    <h2><?php echo Session::get('name');?></h2>
+   
 
     <div class="sidebar-links">
 
       <div class="link-blue">
-        <a href="course-page.php?courseid=<?php echo $course_code; ?>">
+        <a href="course-page.php?courseid=<?php echo $course_code; ?>&id=<?php echo $ID; ?>">
           All
         </a>
       </div>
 
       <div class="link-blue">
-        <a href="course-page.php?courseid=<?php echo $course_code; ?>&shift=day">
+        <a href="course-page.php?courseid=<?php echo $course_code; ?>&shift=day&id=<?php echo $ID; ?>">
           Day
         </a>
       </div>
 
       <div class="link-red">
-        <a href="course-page.php?courseid=<?php echo $course_code; ?>&shift=evening">
+        <a href="course-page.php?courseid=<?php echo $course_code; ?>&shift=evening&id=<?php echo $ID;?>">
           Evening
         </a>
       </div>
@@ -127,7 +134,8 @@
             <h1>Course Timeline</h1>
           </div>
         </div>
-        <?php if($ID = $userID){?>
+        <?php if($login !=false){?>
+        <?php if($sessionID == $userID){?>
         <div class="col-sm-12">
           <div id="showErr"></div>
           <div class="post">
@@ -168,6 +176,7 @@
             </form>
           </div>
         </div>
+        <?php }?>
         <?php }?>
 
 

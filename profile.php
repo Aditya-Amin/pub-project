@@ -73,7 +73,11 @@
 
       <div class="profile-img">
         <div class="up-img">
+        <?php if($userInfo['pro_img'] == ''){?>
+          <img src="images/profile.jpg" alt="profile.jpg">
+        <?php }else {?>
           <img src="uploads/<?php echo $userInfo['pro_img'];?>" height="400px" width="300px" alt="">
+        <?php }?>
         </div>
         <div class="up-prof">
           <input type="file" name="file" id="file">
@@ -112,7 +116,7 @@
       <div class="content">
         <h3><?php echo $course['course_code'];?></h3>
         <p>Course name: <?php echo $course['course_title'];?></p>
-        <a href="course-page.php?courseid=<?php echo $course['id'];?>">Read More</a>
+        <a href="course-page.php?courseid=<?php echo $course['id'];?>&id=<?php echo $course['user_id'];?>">Read More</a>
       </div>
     </div>
     <?php }?>
