@@ -101,6 +101,7 @@
       <a href="profile.php" class="company-logo"><img src="uploads/<?php echo $user['pro_img']; ?>" alt="<?php echo $user['pro_img']; ?>"></a>
     <?php }?>
     <h2><?php echo $user['username']; ?></h2>
+    <h6 class="text-center text-white"><?php echo $user['designation']; ?></h6>
     <?php }?>
     <?php }?>
    
