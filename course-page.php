@@ -26,7 +26,7 @@
      if($_GET['courseid']){
        $course_code = $_GET['courseid'];
      }
-     $getPages = $user->getPages($ID, $course_code);
+     $getPages = $user->getPages($ID, $course_code, '');
      $getUser = $user->getuserInfo($ID);
      $page = 1;
      if(isset($_GET['page'])){
@@ -36,9 +36,10 @@
      $offset = ($page-1) * 5;
      $getPosts = '';
      if(isset($_GET['shift'])){
+      $getPages = $user->getPages($ID, $course_code, $_GET['shift']);
       $getPosts = $user->getuserPostsByShift($course_code, $ID, $_GET['shift'], $offset, 5);
      }else{
-     $getPosts = $user->getuserPosts($course_code, $ID, $offset, 5);
+      $getPosts = $user->getuserPosts($course_code, $ID, $offset, 5);
      }
      
 
@@ -205,7 +206,7 @@
             <?php $total_pages = $getPages / 5 ;?>
             <?php for($i=1; $i<=ceil($total_pages); $i++){?>
             <li class="page-item"><a class="page-link"
-                href="course-page.php?courseid=<?php echo $course_code; ?>&page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                href="course-page.php?courseid=<?php echo $course_code; ?>&page=<?php echo $i; ?>&id=<?php echo $ID; ?>"><?php echo $i; ?></a>
             </li>
             <?php }?>
             <?php }?>
