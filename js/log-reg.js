@@ -14,7 +14,8 @@ signInButton.addEventListener('click', () => {
 let regBtn = document.getElementById('register');
 
 regBtn.onclick = function(){
-	let name = document.getElementById('userName').value,
+	let access = document.getElementById('access').value,
+	    name = document.getElementById('userName').value,
 		email = document.getElementById('userEmail').value,
 		pass = document.getElementById('userPass').value,
 		conPass = document.getElementById('userConfirmPass').value,
@@ -22,6 +23,7 @@ regBtn.onclick = function(){
 
 	let jsonData = JSON.stringify({
 		"register":1,
+		"access":access,
 		"userName": name,
 		"userEmail": email,
 		"userPass":pass,

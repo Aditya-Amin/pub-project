@@ -17,7 +17,7 @@
      $email = Session::get('email');
      $ID = Session::get('id');
 
-     $courses = $user->getAllCourse();
+     $courses = $user->getAllCourse($ID);
      $userInfos = $user->getuserInfo($ID);
   
 ?>
@@ -40,6 +40,12 @@
   <link rel="stylesheet" href="css/fontawesome.all.min.css">
 
   <link rel="stylesheet" href="css/profile.css">
+  <style>
+        p#showErr {
+        position: relative;
+        bottom: -80px;
+        }
+  </style>
   <title>Online Course Timeline</title>
 </head>
 
@@ -78,7 +84,7 @@
     </div>
     <?php }?>
     <?php }?>
-
+   
   </div>
 
 
@@ -92,7 +98,7 @@
     <div class="post">
       <i class="fas fa-book-reader boi"></i>
       <h1>CREATE COURSE</h1>
-      <div class="post-s class=" btn btn-primary" data-toggle="modal" data-target="#exampleModalLong"">
+      <div class="post-s btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
         <i class=" fas fa-plus-circle"id="create-new"></i>
       </div>
     </div>

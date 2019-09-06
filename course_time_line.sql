@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: May 24, 2019 at 06:34 AM
+-- Generation Time: Sep 06, 2019 at 12:21 PM
 -- Server version: 10.1.38-MariaDB
 -- PHP Version: 7.3.3
 
@@ -25,37 +25,86 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `access_token`
+--
+
+CREATE TABLE `access_token` (
+  `id` int(11) NOT NULL,
+  `access_token` varchar(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `access_token`
+--
+
+INSERT INTO `access_token` (`id`, `access_token`) VALUES
+(1, 'pub');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `course_tbl`
+--
+
+CREATE TABLE `course_tbl` (
+  `id` int(11) NOT NULL,
+  `user_id` int(20) NOT NULL,
+  `course_code` varchar(30) NOT NULL,
+  `course_title` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `course_timeline`
+--
+
+CREATE TABLE `course_timeline` (
+  `id` int(11) NOT NULL,
+  `course_code` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `post_content` longtext NOT NULL,
+  `attach_file` varchar(100) NOT NULL,
+  `date` datetime NOT NULL,
+  `shift` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `pub_users`
 --
 
 CREATE TABLE `pub_users` (
   `id` int(11) NOT NULL,
-  `username` varchar(10) NOT NULL,
+  `username` varchar(30) NOT NULL,
   `useremail` varchar(100) NOT NULL,
   `userpass` varchar(100) NOT NULL,
-  `designation` varchar(100) NOT NULL,
+  `designation` varchar(100) DEFAULT 'N/A',
   `pro_img` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `pub_users`
---
-
-INSERT INTO `pub_users` (`id`, `username`, `useremail`, `userpass`, `designation`, `pro_img`) VALUES
-(1, ':name', ':email', ':pass', '', ''),
-(2, 'Adi', 'adittyaamin@gmail.com', 'adi12', '', ''),
-(3, 'Adi', 'adittyaamin@gmail.com', 'adi12', '', ''),
-(4, 'Adi', 'adittyaamin@gmail.com', 'adi12', '', ''),
-(5, 'aditya', 'adi@gmail.com', '1', '', ''),
-(6, 'Adi', 'ad@gmail.com', '1', '', ''),
-(7, 'safa', 'safa@gmail.com', '1', '', ''),
-(8, 'adity', 'aditya@gmail.com', 'c4ca4238a0b923820dcc509a6f75849b', '', ''),
-(9, 'wow.js', 'wow@gmail.com', 'c4ca4238a0b923820dcc509a6f75849b', '', ''),
-(10, 'sanjit', 'sanjit@gmail.com', '133408a7510620bf0c3cd88fbd0dd9f0', '', '');
-
---
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `access_token`
+--
+ALTER TABLE `access_token`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `course_tbl`
+--
+ALTER TABLE `course_tbl`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `course_timeline`
+--
+ALTER TABLE `course_timeline`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `pub_users`
@@ -68,10 +117,28 @@ ALTER TABLE `pub_users`
 --
 
 --
+-- AUTO_INCREMENT for table `access_token`
+--
+ALTER TABLE `access_token`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `course_tbl`
+--
+ALTER TABLE `course_tbl`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `course_timeline`
+--
+ALTER TABLE `course_timeline`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+
+--
 -- AUTO_INCREMENT for table `pub_users`
 --
 ALTER TABLE `pub_users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

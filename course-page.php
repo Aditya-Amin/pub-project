@@ -21,11 +21,21 @@
      if($_GET['courseid']){
        $course_code = $_GET['courseid'];
      }
-
-     echo $ID." ".$course_code;
-     $getPosts = $user->getuserPosts($course_code, $ID);
+     $getPages = $user->getPages($ID, $course_code);
      $getUser = $user->getuserInfo($ID);
-  
+     $page = 1;
+     if(isset($_GET['page'])){
+        $page = $_GET['page'];
+     }
+
+     $offset = ($page-1) * 5;
+     $getPosts = '';
+     if(isset($_GET['shift'])){
+      $getPosts = $user->getuserPostsByShift($course_code, $ID, $_GET['shift'], $offset, 5);
+     }else{
+      $getPosts = $user->getuserPosts($course_code, $ID, $offset, 5);
+     } 
+
 ?>
 
 
@@ -55,6 +65,18 @@
       left: 10px;
       opacity: 0;
     }
+
+    #showFileName {
+      position: relative;
+      left: 140px;
+      bottom: 66px;
+    }
+
+    select#selectShift {
+      background: transparent;
+      border: 1px solid purple;
+      padding: 5px 15px;
+    }
   </style>
 </head>
 
@@ -63,32 +85,34 @@
   <div id="snow_fall"></div>
 
   <aside class="sidebar-left-collapse">
-    <a href="#" class="company-logo"><img src="images/profile.jpg" alt=""></a>
-  
+    <?php if($user->getuserInfo($ID)){?>
+    <?php foreach($user->getuserInfo($ID) as $user){?>
+    <?php if($user['pro_img'] == ''){?>
+    <a href="profile.php" class="company-logo"><img src="images/profile.jpg" alt=""></a>
+    <?php }else {?>
+      <a href="profile.php" class="company-logo"><img src="uploads/<?php echo $user['pro_img']; ?>" alt="<?php echo $user['pro_img']; ?>"></a>
+    <?php }?>
+    <?php }?>
+    <?php }?>
     <h2><?php echo Session::get('name');?></h2>
-  
+
     <div class="sidebar-links">
+
       <div class="link-blue">
-        <a href="#">
-          First Month
+        <a href="course-page.php?courseid=<?php echo $course_code; ?>">
+          All
+        </a>
+      </div>
+
+      <div class="link-blue">
+        <a href="course-page.php?courseid=<?php echo $course_code; ?>&shift=day">
+          Day
         </a>
       </div>
 
       <div class="link-red">
-        <a href="#">
-          Second Month
-        </a>
-      </div>
-
-      <div class="link-yellow">
-        <a href="#">
-          Third Month
-        </a>
-      </div>
-
-      <div class="link-green">
-        <a href="#">
-          Fourth Month
+        <a href="course-page.php?courseid=<?php echo $course_code; ?>&shift=evening">
+          Evening
         </a>
       </div>
 
@@ -105,7 +129,7 @@
         </div>
         <?php if($ID = $userID){?>
         <div class="col-sm-12">
-          <p id="showErr"></p>
+          <div id="showErr"></div>
           <div class="post">
             <div class="post-header">
               <h2 class="post-title" id="post-header-title">
@@ -119,7 +143,7 @@
                 <textarea id="contents" name="post" class="post-text" placeholder="Todays class topics"></textarea>
               </div>
 
-              <div class="post-actions post-actions">
+              <div class="post-actions post-actions clearfix">
                 <div class="post-actions-attachments">
                   <button type="button" class="btn post-actions__upload attachments-btn">
                     <label for="upload-image" class="post-actions-label">
@@ -128,9 +152,15 @@
                     </label>
                   </button>
                   <input type="file" id="upload-file" name="file" multiple>
+                  <span class="text-success" id="showFileName"></span>
                 </div>
                 <input type="hidden" id="course_code" value="<?php echo $course_code; ?>">
-                <div class="post-actions__widget">
+                <select name="" id="selectShift">
+                  <option value="day">Day</option>
+                  <option value="evening">Evening</option>
+                </select>
+
+                <div class="post-actions__widget float-right">
                   <button id="publish" type="button" class="btn post-actions__publish">publish</button>
                 </div>
 
@@ -145,9 +175,12 @@
         <?php foreach($getPosts as $getPost){?>
         <div class="col-sm-12">
           <div class="box">
-            <h1><?php echo $user->convertDateTime($getPost['date']);?></h1>
-            <p><?php echo $getPost['post_content']?></p>
-            <a href="uploads/<?php echo $getPost['attach_file']?>"><?php echo $getPost['attach_file']?></a>
+            <h1><?php echo User::convertDateTime($getPost['date']); ?></h1>
+            <p><?php echo $getPost['post_content']; ?></p>
+            <?php if($getPost['attach_file'] != 'N/A'){?>
+            <a href="uploads/<?php echo $getPost['attach_file']; ?>"><?php echo $getPost['attach_file'];?></a>
+            <?php }?>
+            <span>Shift: <?php echo $getPost['shift']; ?></span>
           </div>
         </div>
         <?php }?>
@@ -159,20 +192,15 @@
 
         <nav aria-label="..." class="custom-pegi">
           <ul class="pagination">
-            <li class="page-item disabled">
-              <span class="page-link">Previous</span>
+            <?php if($getPages){?>
+            <?php $total_pages = $getPages / 5 ;?>
+            <?php for($i=1; $i<=ceil($total_pages); $i++){?>
+            <li class="page-item"><a class="page-link"
+                href="course-page.php?courseid=<?php echo $course_code; ?>&page=<?php echo $i; ?>"><?php echo $i; ?></a>
             </li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item active" aria-current="page">
-              <span class="page-link">
-                2
-                <span class="sr-only">(current)</span>
-              </span>
-            </li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item">
-              <a class="page-link" href="#">Next</a>
-            </li>
+            <?php }?>
+            <?php }?>
+
           </ul>
         </nav>
       </div>
@@ -189,16 +217,8 @@
   <!-- Optional JavaScript -->
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
   <script src="js/jquery-3.4.1.min.js"></script>
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
-  </script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
-  </script>
   <script src="js/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
-  </script>
+  <script src="js/bootstrap.min.js"></script>
   <script type="text/javascript" src="js/particles.js"></script>
   <script type="text/javascript" src="js/app.js"></script>
   <script type="text/javascript">
@@ -211,9 +231,23 @@
       });
     });
   </script>
-  <script src="js/ajax.functions.js"></script>
   <script src="js/ajax.request.js"></script>
-  <script src="js/main.js"></script>
+
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body text-center" id="show">
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 
 </html>

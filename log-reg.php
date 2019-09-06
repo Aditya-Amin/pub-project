@@ -42,6 +42,7 @@
         </div>
         <span>or use your email for registration</span>
          <p id="error"></p>
+         <input type="text" id="access" placeholder="access token" />
         <input type="text" id="userName" placeholder="Name" />
         <input type="email" id="userEmail" placeholder="Email" />
         <input type="password" id="userPass" placeholder="Password" />
@@ -67,7 +68,7 @@
         <input type="email" name="userlogEmail" placeholder="Email" />
         <input type="password" name="userlogPass" placeholder="Password" />
         <a href="#">Forgot your password?</a>
-        <button type="submit" name="login"> Sign In</button>
+        <button type="submit" name="login" id="login"> Sign In</button>
       </form>
     </div>
     <div class="overlay-container">

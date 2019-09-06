@@ -11,21 +11,28 @@
        }
 
        public function userRegister($arr){
+           $access  = $arr->access;
            $name  = $arr->userName;
            $email = $arr->userEmail;
            $pass  = $arr->userPass;
            $confirmPass = $arr->userConfirmPass;
+           $chkToken = $this->checkToken($access);
            $chkUserName = $this->checkUserName($name);
            $chkUserEmail = $this->checkUserEmail($email);
 
-           if( $name == '' || $email == '' || $pass == '' || $confirmPass == ''){
+           if( $access == '' || $name == '' || $email == '' || $pass == '' || $confirmPass == ''){
                $errMsg =  "<span class='alert alert-danger'><strong>Error:</strong>Field Must Not Be Empty!</span>";
                return $errMsg; 
+           }
+           if($chkToken == false){
+            $errMsg =  "<span class='alert alert-danger'><strong>Error:</strong>You are not allowed to register!</span>";
+            return $errMsg; 
            }
            if($chkUserName == true){
                 $errMsg =  "<span class='alert alert-danger'><strong>Error:</strong>Username Already Exist!</span>";
                 return $errMsg; 
            }
+           
            if( strlen($name) < 3){
                 $errMsg =  "<span class='alert alert-danger'><strong>Error:</strong>Username 3 characters Need!</span>";
                 return $errMsg; 
@@ -60,8 +67,19 @@
 
        }
 
+       public function checkToken($name){
+        $userName = "SELECT * FROM `access_token` WHERE `access_token` = :name LIMIT 1";
+        $query =  $this->db->pdo->prepare($userName);
+        $query->bindValue(':name', $name);
+        $query->execute();
+        if( $query->rowCount() > 0){
+            return true;
+        }else{
+            return false;
+        }
+    } 
        public function checkUserName($name){
-           $userName = "SELECT username FROM pub_users WHERE username = :name";
+           $userName = "SELECT * FROM `pub_users` WHERE `username` = :name LIMIT 1";
            $query =  $this->db->pdo->prepare($userName);
            $query->bindValue(':name', $name);
            $query->execute();
@@ -73,7 +91,7 @@
        }
 
        public function checkUserEmail($email){
-            $useremail= "SELECT useremail FROM pub_users WHERE useremail = :email";
+            $useremail= "SELECT * FROM `pub_users` WHERE `useremail`= :email LIMIT 1";
             $query =  $this->db->pdo->prepare($useremail);
             $query->bindValue(':email', $email);
             $query->execute();
@@ -143,10 +161,25 @@
           return $result;
       }
 
-      public function getAllCourse(){
-          $courses = $this->db->pdo->prepare("SELECT * FROM `course_tbl`");
+      public function getAllCourse($id){
+          $courses = $this->db->pdo->prepare("SELECT * FROM `course_tbl` WHERE `user_id` = :ID");
+          $courses->bindValue(':ID',$id);
           $courses->execute();
           $result = $courses->fetchAll();
+          if(empty($result)){
+              return false;
+          }else{
+              return $result;
+          }
+      }
+
+      public function getPages($id, $code){
+          $courses = $this->db->pdo->prepare("SELECT * FROM `course_timeline` WHERE `course_code` = :code AND `user_id` = :ID");
+          $courses->bindValue(':code',$code);
+          $courses->bindValue(':ID',$id);
+         
+          $courses->execute();
+          $result = $courses->rowCount();
           if(empty($result)){
               return false;
           }else{
@@ -166,10 +199,24 @@
         }
     }
 
-    public function getuserPosts($code,$id){
-        $courses = $this->db->pdo->prepare("SELECT * FROM `course_timeline` WHERE course_code = :code AND user_id = :ID");
+    public function getuserPosts($code, $id, $offset, $items){
+        $courses = $this->db->pdo->prepare("SELECT * FROM `course_timeline` WHERE `course_code` = :code AND `user_id` = :ID ORDER BY id DESC LIMIT $offset, $items");
         $courses->bindValue(':code',$code);
         $courses->bindValue(':ID',$id);
+        $courses->execute();
+        $result = $courses->fetchAll();
+        if(empty($result)){
+            return false;
+        }else{
+            return $result;
+        }
+    }
+
+    public function getuserPostsByShift($code, $id, $shift, $offset, $items){
+        $courses = $this->db->pdo->prepare("SELECT * FROM `course_timeline` WHERE `course_code` = :code AND `user_id` = :ID AND `shift` = :shift ORDER BY id DESC LIMIT $offset, $items");
+        $courses->bindValue(':code',$code);
+        $courses->bindValue(':ID',$id);
+        $courses->bindValue(':shift',$shift);
         $courses->execute();
         $result = $courses->fetchAll();
         if(empty($result)){
@@ -207,7 +254,7 @@
           }
       }
 
-      public function convertDateTime($value){
+      public static function convertDateTime($value){
         $timestamp = strtotime($value);
         $month = date("m", $timestamp);
         if($month == '01'){
@@ -236,7 +283,7 @@
             $month = 'Dec';
         }
 
-        $date = $month." ".date("d, Y H:i a", $timestamp);
+        $date = $month." ".date("d, Y", $timestamp);
 
         return $date;
     }

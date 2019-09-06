@@ -53,12 +53,15 @@ $(document).ready(function () {
 
     $("#upload-file").on('change', function () {
         file = document.getElementById('upload-file').files[0];
-        fileSize = file.size;
+        fileSize = file.size / 1000;
+        fileName = file.name;
+        $('#showFileName').text(fileName + '(' + fileSize + 'Kbs)');
     })
 
     $('#publish').click(function () {
         var courseCode = $('#course_code').val();
         var contents = $('#contents').val().trim();
+        var shift = $('#selectShift').val();
         if (fileSize > 20000000) {
             $('#showErr').html(
                 '<span class="alert alert-danger m-auto d-block text-center">File is too large!</span>');
@@ -70,6 +73,7 @@ $(document).ready(function () {
             formData.append('file', file);
             formData.append('contents', contents);
             formData.append('code', courseCode);
+            formData.append('shift', shift);
             formData.append('post', "post");
             $.ajax({
                 url: 'ajax/create.post.php',
@@ -79,9 +83,28 @@ $(document).ready(function () {
                 processData: false,
                 cache: false,
                 success: function (response) {
-                    $('#showErr').html(response);
+                    $('#show').html(response);
+                    $('#exampleModal').modal('show');
+                    setTimeout(function(){
+                        window.location.reload();
+                    },1000);
                 }
             })
+        }
+    })
+
+    $('#designation').on('keypress', function(e){
+        if(e.which === 13){
+            var designation = $(this).text().trim();
+            var obj = { update:1, designation: designation}
+            if(designation == ''){
+                $('#showErr').html('<span class="alert alert-danger">Field Must Not Be Empty!</span>');
+            }else{
+                ajax(obj, 'POST', 'ajax/create.course.php', '#showErr');
+                setTimeout(function(){
+                    window.location.reload();
+                },1000)
+            }
         }
     })
 })
