@@ -67,7 +67,7 @@
 
       <div class="back">
         <div class="info">
-          <h2><?php if(isset($name)){ echo $name; } ?></h2>
+          <h2><?php echo $userInfo['username']; ?></h2>
           <p id="designation"><?php echo $userInfo['designation'];?></p>
           <?php if($log != false){?>
           <?php if($ID === $sessionID){?>

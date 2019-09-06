@@ -6,8 +6,17 @@
       Session::set('login',false);
     } 
 
+    $ID = Session::get('id');
+    $userAvatar = '';
+
     $user = new User();
     $getUsers = $user->getAllUser();
+    $getuser = $user->getuserInfo($ID);
+    if($getuser){
+      foreach($getuser as $users){
+        $userAvatar = $users['pro_img'];
+      }
+    }
 ?>
 <!doctype html>
 <html lang="en">
@@ -153,7 +162,7 @@
 
     <a id="logout" href="?action=logout" data-toggle="tooltip" title="Want to logout?!"><img width="100%" height="100%" src="images/shutdown.png" alt="shutdown"></a>
     <a class="profile-img" href="profile.php" data-toggle="tooltip" title="go to profile">
-      <img src="images/profile.jpg" height="100%" width="100%" alt="">
+      <img src="uploads/<?php echo $userAvatar; ?>" height="100%" width="100%" alt="<?php echo $userAvatar; ?>">
     </a>
 
   <?php }?>
