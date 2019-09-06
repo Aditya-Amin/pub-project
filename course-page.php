@@ -26,7 +26,7 @@
      if($_GET['courseid']){
        $course_code = $_GET['courseid'];
      }
-     $getPages = $user->getPages($ID, $course_code, '');
+     
      $getUser = $user->getuserInfo($ID);
      $page = 1;
      if(isset($_GET['page'])){
@@ -39,6 +39,7 @@
       $getPages = $user->getPages($ID, $course_code, $_GET['shift']);
       $getPosts = $user->getuserPostsByShift($course_code, $ID, $_GET['shift'], $offset, 5);
      }else{
+      $getPages = $user->getPagesBy($ID, $course_code);
       $getPosts = $user->getuserPosts($course_code, $ID, $offset, 5);
      }
      

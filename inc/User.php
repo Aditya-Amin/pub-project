@@ -188,6 +188,21 @@
           }
       }
 
+      public function getPagesBy($id, $code){
+        $courses = $this->db->pdo->prepare("SELECT * FROM `course_timeline` WHERE `course_code` = :code AND `user_id` = :ID");
+        $courses->bindValue(':code',$code);
+        $courses->bindValue(':ID',$id);
+      
+       
+        $courses->execute();
+        $result = $courses->rowCount();
+        if(empty($result)){
+            return false;
+        }else{
+            return $result;
+        }
+    }
+
       public function getuserInfo($id){
         $courses = $this->db->pdo->prepare("SELECT * FROM `pub_users` WHERE id = :ID");
         $courses->bindValue(':ID',$id);
