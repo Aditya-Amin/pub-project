@@ -90,6 +90,18 @@
            }
        }
 
+       public function delete($tbl, $field, $data){
+        $delete = "DELETE FROM $tbl WHERE $field = :data";
+        $query =  $this->db->pdo->prepare($delete);
+        $query->bindValue(':data', $data);
+        $query->execute();
+        if( $query->rowCount() > 0){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
        public function checkUserEmail($email){
             $useremail= "SELECT * FROM `pub_users` WHERE `useremail`= :email LIMIT 1";
             $query =  $this->db->pdo->prepare($useremail);
@@ -226,6 +238,17 @@
         }
     }
 
+    public function getuserPostsBy($id){
+        $courses = $this->db->pdo->prepare("SELECT * FROM `course_timeline` WHERE `user_id` = :ID");
+        $courses->bindValue(':ID',$id);
+        $courses->execute();
+        $result = $courses->fetchAll();
+        if(empty($result)){
+            return false;
+        }else{
+            return $result;
+        }
+    }
 
     public function getuserPosts($code, $id, $offset, $items){
         $courses = $this->db->pdo->prepare("SELECT * FROM `course_timeline` WHERE `course_code` = :code AND `user_id` = :ID ORDER BY id DESC LIMIT $offset, $items");

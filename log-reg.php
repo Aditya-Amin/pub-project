@@ -10,6 +10,7 @@
     $usrLogin = '';
     if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])){
         $usrLogin = $user->userLogin($_POST);
+        include_once 'automation.php';
     }
 
 ?>

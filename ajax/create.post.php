@@ -20,9 +20,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['post']) && $_POST['post
         $fileUpload = $user->upload_file($_FILES, $location);
     }
     
-    $date = date("Y-m-d H:i:s");
+    $date = date("Y-m-d");
     date_default_timezone_set('Asia/Dhaka');
-    $gmt = gmdate("Y-m-d H:i:s", strtotime($date));
+    $gmt = gmdate("Y-m-d", strtotime($date));
     
 
     $create = $DB->pdo->prepare("INSERT INTO `course_timeline` (`id`, `course_code`, `user_id`, `post_content`, `attach_file`, `date`, `shift`) VALUES (:id, :code, :user_id, :contents, :file, :date, :shift)");

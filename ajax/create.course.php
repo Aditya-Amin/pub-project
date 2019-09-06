@@ -10,12 +10,16 @@
        $DB = new Database();
        $course_code  = $_POST['name']; 
        $course_title = $_POST['title'];
+       $date = date("Y-m-d");
+       date_default_timezone_set('Asia/Dhaka');
+       $gmt = gmdate("Y-m-d", strtotime($date));
 
-       $create = $DB->pdo->prepare("INSERT INTO `course_tbl` (`id`, `user_id`, `course_code`, `course_title`) VALUES (:ID, :userid, :code, :title)");
+       $create = $DB->pdo->prepare("INSERT INTO `course_tbl` (`id`, `user_id`, `course_code`, `course_title` , `created`) VALUES (:ID, :userid, :code, :title, :date)");
        $create->bindValue(':ID', NULL);
        $create->bindValue(':userid', $ID);
        $create->bindValue(':code', $course_code);
        $create->bindValue(':title', $course_title);
+       $create->bindValue(':date', $gmt);
        $result = $create->execute();
        if($result){
            echo '<span class="alert alert-success">Course has been added</span>';
