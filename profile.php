@@ -7,15 +7,17 @@
       }
      
      $log  = Session::get('login');
-     if( $log === false){
-        header("Location:index.php");
-     }
-     
-
+    
      $user = new User();    
      $name = Session::get('name');
      $email = Session::get('email');
-     $ID = Session::get('id');
+     $sessionID = Session::get('id');
+     $ID = '';
+     if(isset($_GET['id'])){
+       $ID = $_GET['id'];
+     }else{
+       $ID = $sessionID;
+     }
 
      $courses = $user->getAllCourse($ID);
      $userInfos = $user->getuserInfo($ID);
@@ -41,10 +43,10 @@
 
   <link rel="stylesheet" href="css/profile.css">
   <style>
-        p#showErr {
-        position: relative;
-        bottom: -80px;
-        }
+    p#showErr {
+      position: relative;
+      bottom: -80px;
+    }
   </style>
   <title>Online Course Timeline</title>
 </head>
@@ -67,28 +69,36 @@
         <div class="info">
           <h2><?php if(isset($name)){ echo $name; } ?></h2>
           <p id="designation"><?php echo $userInfo['designation'];?></p>
+          <?php if($log != false){?>
+          <?php if($ID === $sessionID){?>
           <button type="button" id="edit">Edit</button>
+          <?php }?>
+          <?php }?>
         </div>
       </div>
 
       <div class="profile-img">
         <div class="up-img">
-        <?php if($userInfo['pro_img'] == ''){?>
+          <?php if($userInfo['pro_img'] == ''){?>
           <img src="images/profile.jpg" alt="profile.jpg">
-        <?php }else {?>
+          <?php }else {?>
           <img src="uploads/<?php echo $userInfo['pro_img'];?>" height="400px" width="300px" alt="">
-        <?php }?>
+          <?php }?>
         </div>
+        <?php if($log != false){?>
+        <?php if($ID === $sessionID){?>
         <div class="up-prof">
           <input type="file" name="file" id="file">
           <i class="fas fa-camera"></i>
         </div>
+        <?php }?>
+        <?php }?>
       </div>
       <p id="showErr"></p>
     </div>
     <?php }?>
     <?php }?>
-   
+
   </div>
 
 
@@ -99,13 +109,17 @@
 
   <div class="containers">
 
+    <?php if($log != false){?>
+    <?php if($ID === $sessionID){?>
     <div class="post">
       <i class="fas fa-book-reader boi"></i>
       <h1>CREATE COURSE</h1>
       <div class="post-s btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
-        <i class=" fas fa-plus-circle"id="create-new"></i>
+        <i class=" fas fa-plus-circle" id="create-new"></i>
       </div>
     </div>
+    <?php }?>
+    <?php }?>
 
 
     <?php if($courses){?>
@@ -124,7 +138,8 @@
   </div>
 
 
-
+  <?php if($log != false){?>
+  <?php if($ID === $sessionID){?>
   <!-- Modal -->
   <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
     aria-hidden="true">
@@ -156,7 +171,8 @@
       </div>
     </div>
   </div>
-
+  <?php }?>
+  <?php }?>
 
 
 
@@ -226,8 +242,10 @@
       <p class="footer-alt mb-0 f-14">2019 © Tanvir, all rights reserved</p>
     </div>
   </footer>
+  <?php if($log != false){?>
   <a id="logout" href="?action=logout" data-toggle="tooltip" title="Want to logout?!"><img width="100%" height="100%"
       src="images/shutdown.png" alt="shutdown"></a>
+  <?php }?>
 
   <!-- Optional JavaScript -->
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->

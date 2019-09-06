@@ -215,6 +215,18 @@
         }
     }
 
+    public function getAllUser(){
+        $courses = $this->db->pdo->prepare("SELECT * FROM `pub_users`");
+        $courses->execute();
+        $result = $courses->fetchAll();
+        if(empty($result)){
+            return false;
+        }else{
+            return $result;
+        }
+    }
+
+
     public function getuserPosts($code, $id, $offset, $items){
         $courses = $this->db->pdo->prepare("SELECT * FROM `course_timeline` WHERE `course_code` = :code AND `user_id` = :ID ORDER BY id DESC LIMIT $offset, $items");
         $courses->bindValue(':code',$code);

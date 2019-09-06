@@ -96,9 +96,9 @@
     <?php if($user->getuserInfo($ID)){?>
     <?php foreach($user->getuserInfo($ID) as $user){?>
     <?php if($user['pro_img'] == ''){?>
-    <a href="profile.php" class="company-logo"><img src="images/profile.jpg" alt=""></a>
+    <a href="profile.php?id=<?php echo $user['id']; ?>" class="company-logo"><img src="images/profile.jpg" alt=""></a>
     <?php }else {?>
-      <a href="profile.php" class="company-logo"><img src="uploads/<?php echo $user['pro_img']; ?>" alt="<?php echo $user['pro_img']; ?>"></a>
+      <a href="profile.php?id=<?php echo $user['id']; ?>" class="company-logo"><img src="uploads/<?php echo $user['pro_img']; ?>" alt="<?php echo $user['pro_img']; ?>"></a>
     <?php }?>
     <h2><?php echo $user['username']; ?></h2>
     <h6 class="text-center text-white"><?php echo $user['designation']; ?></h6>

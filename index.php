@@ -1,10 +1,13 @@
 <?php
-    include_once 'inc/Session.php';
+     include 'inc/User.php';
     Session::init();
     if(isset($_GET['action']) && $_GET['action'] == 'logout'){
       Session::destroy();
       Session::set('login',false);
     } 
+
+    $user = new User();
+    $getUsers = $user->getAllUser();
 ?>
 <!doctype html>
 <html lang="en">
@@ -42,35 +45,22 @@
 
 
   <div class="containers">
+  <?php if($getUsers){?>
+  <?php foreach($getUsers as $users){?>
     <div class="box">
+    <?php if($users['pro_img'] == ""){?>
       <div class="icon"><i class="fas fa-user-circle"></i></div>
+    <?php } else{?>
+    <div class="icon"><img class="w-50 img-fluid img-thumbnail rounded-circle" src="uploads/<?php echo $users['pro_img']; ?>" alt="<?php echo $users['pro_img']; ?>"></div>
+    <?php }?>
       <div class="content">
-        <h3>Teachers Name</h3>
-        <p>lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsumlorem ipsum lorem ipsum lorem ipsumlorem ipsum lorem ipsum lorem ipsum</p>
-        <a href="profile.html">Read More</a>
+        <h3><?php echo $users['username']; ?></h3>
+        <p><?php echo $users['designation']; ?></p>
+        <a href="profile.php?id=<?php echo $users['id']; ?>">See Details</a>
       </div>
     </div>
-
-
-    <div class="box">
-      <div class="icon"><i class="fas fa-user-circle"></i></div>
-      <div class="content">
-        <h3>Teachers Name</h3>
-        <p>lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsumlorem ipsum lorem ipsum lorem ipsumlorem ipsum lorem ipsum lorem ipsum</p>
-        <a href="profile.html">Read More</a>
-      </div>
-    </div>
-
-
-
-    <div class="box">
-      <div class="icon"><i class="fas fa-user-circle"></i></div>
-      <div class="content">
-        <h3>Teachers Name</h3>
-        <p>lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsumlorem ipsum lorem ipsum lorem ipsumlorem ipsum lorem ipsum lorem ipsum</p>
-        <a href="profile.html">Read More</a>
-      </div>
-    </div>
+    <?php }?>
+    <?php }?>
   </div>
 
 
